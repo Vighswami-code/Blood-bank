@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Donor Registration</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Container and header */
+    .form-container {
+      margin-left: 220px;
+      padding: 40px 50px;
+      background-color: #e9ecef;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    header {
+      background-color: #0056b3;
+      color: white;
+      padding: 20px 50px;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-left: 220px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: fixed;
+      width: calc(100% - 220px);
+      top: 0;
+      z-index: 10;
+    }
+    form {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-top: 100px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #212529;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      border: 2px solid #007BFF;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+      border-color: #0056b3;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      padding: 14px 40px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,123,255,0.4);
+    }
+    button:hover {
+      background-color: #0056b3;
+      box-shadow: 0 2px 12px rgba(0,86,179,0.7);
+    }
+    .success-message {
+      background-color: #D4EDDA;
+      color: #155724;
+      border: 1px solid #C3E6CB;
+      padding: 15px 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <header>Donor Registration</header>
+
+  <div class="form-container">
+    <form id="donorForm">
+      <label for="donorName">Full Name *</label>
+      <input type="text" id="donorName" name="donorName" required />
+
+      <label for="bloodGroup">Blood Group *</label>
+      <select id="bloodGroup" name="bloodGroup" required>
+        <option value="">-- Select Blood Group --</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+      </select>
+
+      <label for="age">Age *</label>
+      <input type="number" id="age" name="age" min="18" max="65" required />
+
+      <label for="contactNumber">Contact Number *</label>
+      <input type="text" id="contactNumber" name="contactNumber" required pattern="[0-9]{10,15}" placeholder="Enter valid phone number" />
+
+      <label for="lastDonationDate">Last Donation Date</label>
+      <input type="date" id="lastDonationDate" name="lastDonationDate" />
+
+      <button type="submit">Register Donor</button>
+    </form>
+
+    <div id="successMessage" class="success-message" style="display:none;">
+      Donor registered successfully!
+    </div>
+  </div>
+
+  <script>
+    const userRole = localStorage.getItem("userRole");
+    if (userRole !== "admin" && userRole !== "receptionist") {
+      alert("Access denied. Please login.");
+      window.location.href = "login.html";
+    }
+
+    const form = document.getElementById('donorForm');
+    const successMessage = document.getElementById('successMessage');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Collect form data
+      const newDonor = {
+        id: Date.now(),
+        donorName: form.donorName.value.trim(),
+        bloodGroup: form.bloodGroup.value,
+        age: parseInt(form.age.value),
+        contactNumber: form.contactNumber.value.trim(),
+        lastDonationDate: form.lastDonationDate.value || "N/A"
+      };
+
+      // Save donor to localStorage
+      const donors = JSON.parse(localStorage.getItem("donors")) || [];
+      donors.push(newDonor);
+      localStorage.setItem("donors", JSON.stringify(donors));
+
+      // Show success message
+      successMessage.style.display = "block";
+
+      // Reset form
+      form.reset();
+
+      setTimeout(() => {
+        successMessage.style.display = "none";
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>View Blood Requests</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .container {
+      margin-left: 220px; /* sidebar width */
+      padding: 40px 50px;
+      background-color: #e9ecef;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    header {
+      background-color: #0056b3;
+      color: white;
+      padding: 20px 50px;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-left: 220px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: fixed;
+      width: calc(100% - 220px);
+      top: 0;
+      z-index: 10;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 100px;
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      font-size: 15px;
+    }
+    th, td {
+      padding: 14px 18px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #007BFF;
+      color: white;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    tr:hover {
+      background-color: #f1f9ff;
+    }
+    .action-btn {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      margin-right: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .action-btn:hover {
+      background-color: #0056b3;
+    }
+    .delete-btn {
+      background-color: #dc3545;
+    }
+    .delete-btn:hover {
+      background-color: #a71d2a;
+    }
+    .status-pending {
+      color: #ffc107;
+      font-weight: 700;
+    }
+    .status-completed {
+      color: #28a745;
+      font-weight: 700;
+    }
+    .no-requests {
+      margin-top: 120px;
+      font-size: 18px;
+      color: #555;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>View Blood Requests</header>
+
+  <div class="container">
+    <table id="requestsTable">
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Blood Group</th>
+          <th>Quantity (Units)</th>
+          <th>Date Required</th>
+          <th>Contact Number</th>
+          <th>Notes</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Requests will be injected here -->
+      </tbody>
+    </table>
+    <div id="noRequestsMsg" class="no-requests" style="display:none;">
+      No blood requests found.
+    </div>
+  </div>
+
+  <script>
+    // Access control
+    const userRole = localStorage.getItem("userRole");
+    if (userRole !== "admin" && userRole !== "receptionist") {
+      alert("Access denied. Please login.");
+      window.location.href = "login.html";
+    }
+
+    const tableBody = document.querySelector("#requestsTable tbody");
+    const noRequestsMsg = document.getElementById("noRequestsMsg");
+
+    function loadRequests() {
+      const requests = JSON.parse(localStorage.getItem("bloodRequests")) || [];
+      tableBody.innerHTML = "";
+
+      if (requests.length === 0) {
+        noRequestsMsg.style.display = "block";
+        document.getElementById("requestsTable").style.display = "none";
+        return;
+      } else {
+        noRequestsMsg.style.display = "none";
+        document.getElementById("requestsTable").style.display = "table";
+      }
+
+      requests.forEach(request => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${request.patientName}</td>
+          <td>${request.bloodGroup}</td>
+          <td>${request.quantity}</td>
+          <td>${request.dateRequired}</td>
+          <td>${request.contactNumber}</td>
+          <td>${request.notes || ""}</td>
+          <td class="${request.status === 'completed' ? 'status-completed' : 'status-pending'}">${request.status ? request.status : 'pending'}</td>
+          <td>
+            ${request.status !== 'completed' ? `<button class="action-btn complete-btn" data-id="${request.id}">Mark Completed</button>` : ''}
+            <button class="action-btn delete-btn" data-id="${request.id}">Delete</button>
+          </td>
+        `;
+
+        tableBody.appendChild(tr);
+      });
+
+      // Attach event listeners after rendering
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const id = Number(e.target.getAttribute("data-id"));
+          deleteRequest(id);
+        });
+      });
+
+      document.querySelectorAll(".complete-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const id = Number(e.target.getAttribute("data-id"));
+          markCompleted(id);
+        });
+      });
+    }
+
+    function deleteRequest(id) {
+      let requests = JSON.parse(localStorage.getItem("bloodRequests")) || [];
+      requests = requests.filter(r => r.id !== id);
+      localStorage.setItem("bloodRequests", JSON.stringify(requests));
+      loadRequests();
+    }
+
+    function markCompleted(id) {
+      let requests = JSON.parse(localStorage.getItem("bloodRequests")) || [];
+      requests = requests.map(r => {
+        if (r.id === id) r.status = "completed";
+        return r;
+      });
+      localStorage.setItem("bloodRequests", JSON.stringify(requests));
+      loadRequests();
+    }
+
+    loadRequests();
+  </script>
+</body>
+</html>

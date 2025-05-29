@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    checkAuth("admin");
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="blood.avif" alt="logo" />
+      <h2>Admin Panel</h2>
+    </div>
+    <nav>
+     
+     
+  <a href="admin-dashboard.html">Dashboard</a>
+  <a href="blood-inventory.html">Blood Inventory</a>
+  <a href="donor-records.html">Donor Records</a>
+  <a href="patient-records.html">Patient Records</a>
+  <a href="staff-management.html">Staff Management</a>
+  <a href="appointments.html">Appointments</a>
+  <a href="requests.html">Requests</a>
+  <a href="reports.html">Reports</a>
+  <a href="feedback.html">Feedback</a>
+  <a href="#" onclick="logout()">Logout</a>
+<a href="chat-admin.html">Chat with Receptionist</a>
+<a href="view-requests.html">View Blood Requests</a>
+<a href="donor-registration.html">Donor Registration</a>
+<a href="donor-list.html">Donor List</a>
+<a href="chat.html">Chat</a>
+
+
+
+
+
+    </nav>
+    
+  </div>
+
+  <div class="main">
+    <header>
+      <h1>Welcome, Admin</h1>
+      <div class="profile">👤 admin</div>
+    </header>
+
+    <section class="cards">
+      <div class="card">Blood Inventory <span>75 Units</span></div>
+      <div class="card">Donors <span>112</span></div>
+      <div class="card">Patients <span>46</span></div>
+      <div class="card">Staff <span>10 Members</span></div>
+      <div class="card">Appointments <span>8 Today</span></div>
+      <div class="card">Pending Requests <span>3</span></div>
+      <div class="card">Reports <span>12 Files</span></div>
+      <div class="card">Feedback <span>24 Messages</span></div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

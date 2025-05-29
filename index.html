@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <script>
+  if (!localStorage.getItem("loggedIn")) {
+    window.location.href = "login.html";
+  }
+</script>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blood Bank Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="blood.avif" alt="logo" />
+      <h2>BloodBank+</h2>
+    </div>
+    <nav>
+      <a href="#" onclick="navigate('dashboard')">Dashboard</a>
+      <a href="#" onclick="navigate('add')">Add</a>
+      <a href="#" onclick="navigate('delete')">Delete</a>
+      <a href="#" onclick="navigate('update')">Update</a>
+      <a href="#" onclick="navigate('chat')">Chat</a>
+      <a href="#" onclick="navigate('patient')">Patient Details</a>
+      <a href="#" onclick="navigate('blood')">Blood Details</a>
+      <a href="#" onclick="navigate('contact')">Contact Us</a>
+      <a href="#" onclick="navigate('about')">About Us</a>
+     <a href="#" onclick="logout()">Logout</a>
+
+    </nav>
+  </div>
+
+  <div class="main">
+    <header>
+      <h1>Welcome, Admin</h1>
+      <div class="profile">👤 Admin</div>
+    </header>
+
+    <section class="cards">
+      <div class="card">A+ <span>15 Units</span></div>
+      <div class="card">A- <span>10 Units</span></div>
+      <div class="card">B+ <span>20 Units</span></div>
+      <div class="card">B- <span>7 Units</span></div>
+      <div class="card">O+ <span>25 Units</span></div>
+      <div class="card">O- <span>5 Units</span></div>
+      <div class="card">AB+ <span>12 Units</span></div>
+      <div class="card">AB- <span>4 Units</span></div>
+    </section>
+
+    <section class="info">
+      <div>
+        <h3>Recent Patients</h3>
+        <ul>
+          <li>John Doe - A+</li>
+          <li>Jane Smith - B-</li>
+          <li>Alan Walker - O+</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Activity Logs</h3>
+        <ul>
+          <li>Donated 2 units - A+ - 10:00 AM</li>
+          <li>Requested 1 unit - B+ - 10:45 AM</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

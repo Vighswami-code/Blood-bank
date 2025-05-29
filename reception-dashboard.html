@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Receptionist Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    checkAuth("receptionist");
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="blood.avif" alt="logo" />
+      <h2>Reception Desk</h2>
+    </div>
+    <nav>
+      <a href="#">Dashboard</a>
+      <a href="#">Patient Entry</a>
+      <a href="#">Request Blood</a>
+      <a href="#">Contact Admin</a>
+      <a href="#" onclick="logout()">Logout</a>
+      <a href="chat-reception.html">Chat with Admin</a>
+      <a href="blood-request.html">Request Blood</a>
+      <a href="donor-registration.html">Donor Registration</a>
+      <a href="donor-list.html">Donor List</a>
+      <a href="chat.html">Chat</a>
+
+
+
+
+
+    </nav>
+  </div>
+
+  <div class="main">
+    <header>
+      <h1>Welcome, Receptionist</h1>
+    </header>
+    <section class="cards">
+      <div class="card">Today's Requests <span>4</span></div>
+      <div class="card">Pending Approvals <span>2</span></div>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

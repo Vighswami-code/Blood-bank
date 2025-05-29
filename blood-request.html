@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blood Request Form</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Form container */
+    .form-container {
+      margin-left: 220px; /* sidebar width */
+      padding: 40px 50px;
+      background-color: #e9ecef;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    header {
+      background-color: #0056b3;
+      color: white;
+      padding: 20px 50px;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-left: 220px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: fixed;
+      width: calc(100% - 220px);
+      top: 0;
+      z-index: 10;
+    }
+    form {
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-top: 100px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #212529;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      border: 2px solid #007BFF;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease;
+      resize: vertical;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #0056b3;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      padding: 14px 40px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,123,255,0.4);
+    }
+    button:hover {
+      background-color: #0056b3;
+      box-shadow: 0 2px 12px rgba(0,86,179,0.7);
+    }
+    .success-message {
+      background-color: #D4EDDA;
+      color: #155724;
+      border: 1px solid #C3E6CB;
+      padding: 15px 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <header>Blood Request Form</header>
+
+  <div class="form-container">
+    <form id="bloodRequestForm">
+      <label for="patientName">Patient Name *</label>
+      <input type="text" id="patientName" name="patientName" required />
+
+      <label for="bloodGroup">Blood Group *</label>
+      <select id="bloodGroup" name="bloodGroup" required>
+        <option value="">-- Select Blood Group --</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+      </select>
+
+      <label for="quantity">Quantity (Units) *</label>
+      <input type="number" id="quantity" name="quantity" min="1" required />
+
+      <label for="dateRequired">Date Required *</label>
+      <input type="date" id="dateRequired" name="dateRequired" required />
+
+      <label for="contactNumber">Contact Number *</label>
+      <input type="text" id="contactNumber" name="contactNumber" required pattern="[0-9]{10,15}" placeholder="Enter valid phone number" />
+
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" rows="4" placeholder="Any additional info (optional)"></textarea>
+
+      <button type="submit">Submit Request</button>
+    </form>
+
+    <div id="successMessage" class="success-message" style="display:none;">
+      Blood request submitted successfully!
+    </div>
+  </div>
+
+  <script>
+    // Ensure user is logged in and has right role
+    const userRole = localStorage.getItem("userRole");
+    if (userRole !== "admin" && userRole !== "receptionist") {
+      alert("Access denied. Please login.");
+      window.location.href = "login.html";
+    }
+
+    const form = document.getElementById('bloodRequestForm');
+    const successMessage = document.getElementById('successMessage');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Validate dateRequired is today or future
+      const dateRequiredInput = document.getElementById('dateRequired');
+      const today = new Date();
+      const selectedDate = new Date(dateRequiredInput.value);
+
+      if (selectedDate < today.setHours(0,0,0,0)) {
+        alert("Date Required cannot be in the past.");
+        return;
+      }
+
+      // Collect form data
+      const newRequest = {
+        id: Date.now(),
+        patientName: form.patientName.value.trim(),
+        bloodGroup: form.bloodGroup.value,
+        quantity: parseInt(form.quantity.value),
+        dateRequired: form.dateRequired.value,
+        contactNumber: form.contactNumber.value.trim(),
+        notes: form.notes.value.trim()
+      };
+
+      // Get existing requests from localStorage or initialize empty array
+      const requests = JSON.parse(localStorage.getItem("bloodRequests")) || [];
+
+      // Add new request
+      requests.push(newRequest);
+
+      // Save back to localStorage
+      localStorage.setItem("bloodRequests", JSON.stringify(requests));
+
+      // Show success message
+      successMessage.style.display = "block";
+
+      // Reset form
+      form.reset();
+
+      // Hide success after 3 seconds
+      setTimeout(() => {
+        successMessage.style.display = "none";
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
